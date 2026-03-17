@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ČOBÍK: THE HUNGARIAN BEAST - OMEGA EDITION</title>
+<link href="https://fonts.googleapis.com/css2?family=Permanent+Marker&family=Poppins:wght@400;900&display=swap" rel="stylesheet">
+<style>
+    :root {
+        --hu-red: #CE2939; --hu-white: #FFFFFF; --hu-green: #477050;
+    }
+    body {
+        font-family: 'Poppins', sans-serif; background: #000; color: #fff; margin: 0; overflow-x: hidden;
+        background: linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.8)), url('https://images.unsplash.com/photo-1549877452-9c387954fbc2?auto=format&fit=crop&w=1920&q=80');
+        background-attachment: fixed; background-size: cover;
+    }
+    .glitch-header {
+        background: linear-gradient(to bottom, var(--hu-red), var(--hu-white), var(--hu-green));
+        padding: 60px 20px; border-bottom: 10px solid #ffe600; text-shadow: 5px 5px 0px #000;
+    }
+    h1 { font-family: 'Permanent Marker', cursive; font-size: 80px; margin: 0; animation: shake 0.5s infinite; }
+    @keyframes shake { 0% { transform: translate(0,0); } 10% { transform: translate(-5px,-2px); } 20% { transform: translate(5px,2px); } 100% { transform: translate(0,0); } }
+    
+    .container { max-width: 1200px; margin: auto; padding: 20px; }
+    .card { 
+        background: rgba(0,0,0,0.85); border: 4px solid var(--hu-red); border-radius: 0px; 
+        padding: 40px; margin: 40px 0; position: relative; box-shadow: 20px 20px 0px var(--hu-green);
+        transition: 0.3s;
+    }
+    .card:hover { transform: scale(1.02) rotate(-1deg); box-shadow: 30px 30px 0px #ffe600; }
+
+    /* HRA: BALATON SURVIVAL */
+    #game-canvas { background: #007bb5; border: 5px solid #fff; width: 100%; height: 300px; position: relative; overflow: hidden; cursor: crosshair; }
+    .enemy { position: absolute; font-size: 40px; transition: 0.1s; }
+    .player { position: absolute; font-size: 50px; bottom: 10px; left: 50%; transform: translateX(-50%); z-index: 10; }
+
+    /* STATS */
+    .stat-box { display: flex; justify-content: space-around; background: #ffe600; color: #000; padding: 20px; font-weight: 900; font-size: 24px; margin: 20px 0; }
+    
+    /* GALERIE */
+    .mega-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 15px; }
+    .mega-grid img { width: 100%; height: 300px; object-fit: cover; border: 5px solid #fff; filter: grayscale(50%); transition: 0.3s; }
+    .mega-grid img:hover { filter: grayscale(0%); transform: scale(1.1); z-index: 5; border-color: var(--hu-red); }
+
+    button { 
+        background: var(--hu-red); color: white; border: none; padding: 20px 40px; font-size: 25px; 
+        font-weight: 900; cursor: pointer; text-transform: uppercase; clip-path: polygon(10% 0, 100% 0, 90% 100%, 0% 100%);
+    }
+    button:hover { background: #ff0000; transform: scale(1.2); }
+
+    .kousnuti-alert { color: #ff0000; font-size: 50px; font-weight: 900; display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 999; }
+</style>
+</head>
+<body>
+
+<div class="kousnuti-alert" id="alert">⚠️ ČOBÍK TĚ KOUSNUL! ⚠️</div>
+
+<header class="glitch-header">
+    <h1>ČOBÍK: MAĎARSKÁ BESTIE</h1>
+    <p style="font-size: 30px; background: #000; display: inline-block; padding: 10px;">100% PAPRIKA | 100% VESLOVÁNÍ | 200% KOUSÁNÍ</p>
+</header>
+
+<div class="container">
+    <div class="stat-box">
+        <span>GULÁŠ: VYPIZELOVÁN ✅</span>
+        <span>TEMPERAMENT: EXTRÉMNÍ 🔥</span>
+        <span>KOUSNUTÍ DNES: <span id="bite-count">666</span></span>
+    </div>
+
+    <div class="card">
+        <h2>🎮 HRA: BALATON SURVIVAL 🌊</h2>
+        <p>Uhýbej Čobíkovým čelistem (🦷) a sbírej Maďarské klobásy (🌭)! Použij ŠIPKY nebo KLIKÁNÍ.</p>
+        <div id="game-canvas">
+            <div id="player" class="player">🚣</div>
+        </div>
+        <button onclick="startGame()">START MASAKRU</button>
+    </div>
+
+    <div class="card">
+        <h2>🔥 ČOBÍKŮV GENERÁTOR MAĎARSKÉHO HNĚVU</h2>
+        <p>Klikni, když se Čobík kousne:</p>
+        <div id="quote-display" style="font-size: 35px; min-height: 80px; color: #ffe600; font-weight: 900;">--- KLIKNI PRO HLÁŠKU ---</div>
+        <button onclick="generateQuote()" style="background: var(--hu-green);">NASRAT ČOBÍKA!</button>
+    </div>
+
+    <div class="card">
+        <h2>📸 TOTÁLNĚ PRAVDIVÁ GALERIE (ŽÁDNÝ FEJK)</h2>
+        <div class="mega-grid">
+            <img src="https://static.vecteezy.com/system/resources/thumbnails/070/238/854/small/a-person-rowing-on-a-lake-at-sunset-photo.jpeg" alt="Rowing">
+            <img src="https://www.simplyrecipes.com/thmb/1P8E9m3nTYPkvNu4ig3SqlSYcZ0=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/simply-recipes-hungarian-goulash-lead-1-9b243ad244134164aed863c874215ffa.jpg" alt="Goulash">
+            <img src="https://images.unsplash.com/photo-1516734212186-a967f81ad0d7?auto=format&fit=crop&w=600" alt="Hungary">
+            <img src="https://images.unsplash.com/photo-1590419690008-905895e8fe0d?auto=format&fit=crop&w=600" alt="Dog teeth">
+            <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=600" alt="Angry dog">
+            <img src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=600" alt="Food">
+        </div>
+    </div>
+
+    <div class="card" style="border: 10px solid gold;">
+        <h2>🇭🇺 TAJNÁ DATA O ŠAMPIONOVI</h2>
+        <ul style="font-size: 25px; line-height: 1.8;">
+            <li>✅ **Původ:** Přímý potomek Attily Biče Božího.</li>
+            <li>✅ **Trénink:** Vesluje proti proudu Dunaje se zátěží 50kg klobás.</li>
+            <li>✅ **Kousání:** Dokáže prokousnout i titanové veslo, když mu vezmeš guláš.</li>
+            <li>✅ **Maďarsko:** Umí hymnu v rytmu veslování.</li>
+        </ul>
+    </div>
+</div>
+
+<script>
+    // GENERÁTOR HLÁŠEK
+    const quotes = [
+        "NEMESKEDJ! (Nekecej!)",
+        "A KURVA ÉLETBE! 🤬",
+        "GULYÁS VAGY HALÁL! (Guláš nebo smrt!)",
+        "KOUSNU TĚ DO VESLA!",
+        "BALATON JE MOJE MOŘE!",
+        "MÁM V KRVI PAPRIKU!"
+    ];
+    function generateQuote() {
+        const q = quotes[Math.floor(Math.random()*quotes.length)];
+        document.getElementById('quote-display').innerText = q;
+        if(Math.random() > 0.7) triggerBite();
+    }
+
+    function triggerBite() {
+        const a = document.getElementById('alert');
+        a.style.display = 'block';
+        setTimeout(() => a.style.display = 'none', 1000);
+        document.getElementById('bite-count').innerText = parseInt(document.getElementById('bite-count').innerText) + 1;
+    }
+
+    // HRA: BALATON SURVIVAL
+    let gameActive = false;
+    function startGame() {
+        if(gameActive) return;
+        gameActive = true;
+        let score = 0;
+        const canvas = document.getElementById('game-canvas');
+        
+        const interval = setInterval(() => {
+            if(!gameActive) { clearInterval(interval); return; }
+            
+            const enemy = document.createElement('div');
+            enemy.className = 'enemy';
+            enemy.innerText = Math.random() > 0.3 ? '🦷' : '🌭';
+            enemy.style.left = Math.random() * 90 + '%';
+            enemy.style.top = '-50px';
+            canvas.appendChild(enemy);
+
+            let pos = -50;
+            const fall = setInterval(() => {
+                pos += 5;
+                enemy.style.top = pos + 'px';
+                if(pos > 300) { enemy.remove(); clearInterval(fall); }
+            }, 20);
+
+        }, 800);
+    }
+
+    // Pohyb hráče
+    document.addEventListener('keydown', (e) => {
+        const p = document.getElementById('player');
+        let left = parseInt(window.getComputedStyle(p).left);
+        if(e.key === 'ArrowLeft') p.style.left = (left - 30) + 'px';
+        if(e.key === 'ArrowRight') p.style.left = (left + 30) + 'px';
+    });
+</script>
+
+</body>
+</html>
