@@ -1,11 +1,300 @@
 <!DOCTYPE html>
-<html>
+<html lang="cs">
 <head>
-  <title>My Website</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ČOBÍK: THE HUNGARIAN BEAST - OMEGA MEGA CHAOS EDITION</title>
+    <link href="https://fonts.googleapis.com/css2?family=Permanent+Marker&family=Poppins:wght@400;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --hu-red: #CE2939; --hu-white: #FFFFFF; --hu-green: #477050; --hu-gold: #ffe600;
+        }
+        body {
+            font-family: 'Poppins', sans-serif; background: #000; color: #fff; margin: 0; overflow-x: hidden;
+            background: linear-gradient(rgba(0,0,0,0.85), rgba(0,0,0,0.85)), url('https://images.unsplash.com/photo-1549877452-9c387954fbc2?auto=format&fit=crop&w=1920&q=80');
+            background-attachment: fixed; background-size: cover;
+            cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><text y="20" font-size="20">🌶️</text></svg>'), auto;
+            transition: background-color 0.2s;
+        }
+        
+        /* --- MEGA CHAOS EFFECTY --- */
+        body.rage { animation: rageFlash 0.2s infinite; }
+        @keyframes rageFlash { 0% { background-color: #000; } 50% { background-color: #500; } 100% { background-color: #000; } }
+
+        .screen-shake { animation: screenShake 0.3s; }
+        @keyframes screenShake { 0% { transform: translate(0); } 25% { transform: translate(10px, -10px); } 50% { transform: translate(-10px, 10px); } 100% { transform: translate(0); } }
+
+        .particle { position: absolute; font-size: 25px; pointer-events: none; z-index: 1000; animation: explode 1s forwards cubic-bezier(0, .9, .57, 1); }
+        @keyframes explode { to { transform: translate(var(--x), var(--y)) scale(0.1) rotate(360deg); opacity: 0; } }
+
+        .glitch { animation: glitch 0.1s infinite; }
+        @keyframes glitch { 0% { transform: skew(0deg); filter: hue-rotate(0deg); } 50% { transform: skew(-5deg); filter: hue-rotate(180deg); } 100% { transform: skew(0deg); filter: hue-rotate(0deg); } }
+
+        /* HEADER */
+        .glitch-header {
+            background: linear-gradient(to bottom, var(--hu-red), var(--hu-white), var(--hu-green));
+            padding: 60px 20px; border-bottom: 10px solid var(--hu-gold); text-shadow: 5px 5px 0px #000; text-align: center;
+        }
+        h1 { font-family: 'Permanent Marker', cursive; font-size: clamp(40px, 8vw, 80px); margin: 0; animation: shake 0.3s infinite; }
+        @keyframes shake { 0% { transform: translate(0,0); } 10% { transform: translate(-2px,-1px); } 100% { transform: translate(0,0); } }
+
+        .marquee-container { background: var(--hu-red); color: white; padding: 10px; font-weight: 900; font-size: 20px; border-bottom: 5px solid #fff; }
+
+        .container { max-width: 1200px; margin: auto; padding: 20px; }
+        
+        .card { 
+            background: rgba(0,0,0,0.9); border: 4px solid var(--hu-red); border-radius: 0px; 
+            padding: 40px; margin: 40px 0; position: relative; box-shadow: 15px 15px 0px var(--hu-green); transition: 0.3s;
+        }
+        .card:hover { transform: translateY(-5px); box-shadow: 20px 20px 0px var(--hu-gold); }
+
+        /* RADAR */
+        .radar-box {
+            width: 200px; height: 200px; border: 4px solid var(--hu-green); border-radius: 50%; margin: 20px auto;
+            position: relative; background: radial-gradient(circle, #003300 0%, #000 100%); overflow: hidden; cursor: pointer;
+        }
+        .radar-sweep { position: absolute; width: 100%; height: 100%; background: conic-gradient(from 0deg, transparent 0%, rgba(71, 112, 80, 0.5) 10%, transparent 20%); animation: sweep 2s linear infinite; }
+        @keyframes sweep { to { transform: rotate(360deg); } }
+        .blip { position: absolute; width: 12px; height: 12px; background: red; border-radius: 50%; box-shadow: 0 0 15px red; display: none; }
+
+        /* MINIGAMES STYLES */
+        .river { width: 100%; height: 100px; background: linear-gradient(to bottom, #00c6ff, #0072ff); border-radius: 10px; margin: 20px 0; position: relative; overflow: hidden; border: 4px solid #fff; }
+        .boat { position: absolute; left: 10px; top: 20px; font-size: 50px; transition: left 0.1s linear; z-index: 5; }
+        .finish { position: absolute; right: 20px; top: 0; width: 15px; height: 100%; background: repeating-linear-gradient(45deg, #000, #000 10px, #fff 10px, #fff 20px); }
+        .key-hint { background: var(--hu-red); padding: 5px 10px; border-radius: 5px; font-family: monospace; }
+        #energy-bar-container { width: 100%; height: 35px; background: #333; border: 3px solid var(--hu-gold); margin: 20px 0; }
+        #energy-bar { width: 0%; height: 100%; background: linear-gradient(90deg, var(--hu-red), var(--hu-green)); transition: 0.3s; }
+
+        /* BALATON SURVIVAL */
+        #game-area { background: #007bb5; border: 5px solid #fff; width: 100%; height: 450px; position: relative; overflow: hidden; background-image: radial-gradient(circle at 50% 50%, #0099cc 0%, #007bb5 100%); }
+        .game-obj { position: absolute; font-size: 40px; will-change: transform; pointer-events: none; }
+        #player { position: absolute; font-size: 50px; bottom: 10px; left: 50%; transform: translateX(-50%); z-index: 100; transition: left 0.05s linear; }
+        #score-board { position: absolute; top: 10px; right: 10px; font-weight: 900; background: var(--hu-gold); color: #000; padding: 5px 15px; z-index: 110; border: 2px solid #000; }
+
+        /* STATS & TABLES */
+        .stat-box { display: flex; flex-wrap: wrap; justify-content: space-around; background: var(--hu-gold); color: #000; padding: 20px; font-weight: 900; font-size: 20px; margin: 20px 0; }
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 18px; }
+        th { background: var(--hu-red); padding: 15px; text-align: left; }
+        td { padding: 15px; border-bottom: 1px solid #444; }
+
+        /* GALERIE */
+        .mega-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px; }
+        .mega-grid img { width: 100%; height: 250px; object-fit: cover; border: 5px solid #fff; filter: grayscale(80%); transition: 0.4s; }
+        .mega-grid img:hover { filter: grayscale(0%); transform: scale(1.05); z-index: 5; border-color: var(--hu-red); }
+
+        button { background: var(--hu-red); color: white; border: none; padding: 15px 30px; font-size: 18px; font-weight: 900; cursor: pointer; text-transform: uppercase; clip-path: polygon(5% 0, 100% 0, 95% 100%, 0% 100%); margin: 5px; }
+        button:hover { background: #ff0000; transform: scale(1.05); }
+
+        .kousnuti-alert { color: #ff0000; font-size: 40px; font-weight: 900; display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 999; background: rgba(255,255,255,0.95); padding: 30px; border: 15px solid red; pointer-events: none;}
+    </style>
 </head>
 <body>
-  <h1>Hello, world!</h1>
-  <p>This is my GitHub Pages site.</p>
-  <p><a href="potrat1.html">Go to potrat1 page</a></p>
+
+<div class="kousnuti-alert" id="alert">⚠️ ČOBÍK TĚ KOUSNUL! ⚠️</div>
+
+<header class="glitch-header">
+    <h1 class="glitch">ČOBÍK: MAĎARSKÁ BESTIE</h1>
+    <p style="font-size: 24px; background: #000; display: inline-block; padding: 10px; margin-top: 10px;">OMEGA MEGA CHAOS EDITION</p>
+</header>
+
+<div class="marquee-container">
+    <marquee scrollamount="12">🔴 BREAKING NEWS: ČOBÍK PROKOUSL KOTVU NA BALATONU 🔴 SCHOVEJTE PAPRIKU 🔴 GULÁŠ JE V OHROŽENÍ 🔴</marquee>
+</div>
+
+<div class="container">
+
+    <div class="card" style="text-align: center;">
+        <h2>🛰️ MAĎARSKÝ RADAR PROTI BESTII</h2>
+        <div class="radar-box" onclick="scanRadar()">
+            <div class="radar-sweep"></div>
+            <div id="blip-1" class="blip" style="top: 30%; left: 60%;"></div>
+            <div id="blip-2" class="blip" style="top: 70%; left: 20%;"></div>
+        </div>
+        <p id="radar-status" style="font-weight: 900; color: var(--hu-gold);">Klikni pro skenování okolí...</p>
+    </div>
+
+    <div class="card">
+        <h2>🏆 Olympijský Sprint 🏆</h2>
+        <p>Mačkej střídavě <span class="key-hint">A</span> a <span class="key-hint">D</span>!</p>
+        <div class="river" id="sprint-river">
+            <div class="boat" id="sprint-boat">🐕🚣</div>
+            <div class="finish"></div>
+        </div>
+        <button onclick="resetSprint()">ZNOVU NA START</button>
+    </div>
+
+    <div class="card" style="text-align: center;">
+        <h2>🍲 Nakrm Čobíka Gulášem!</h2>
+        <div id="goulash-bowl" onclick="feedCobik()" style="font-size: 100px; cursor: pointer; transition: 0.1s;">🍲</div>
+        <div id="energy-bar-container"><div id="energy-bar"></div></div>
+        <p id="energy-status" style="font-weight: 900;">Energie: 0%</p>
+    </div>
+
+    <div class="stat-box">
+        <span>GULÁŠ LEVEL: <span id="gulyas-val">88%</span></span>
+        <span>STAV: AGRESIVNÍ 👺</span>
+        <span>KOUSNUTÍ DNES: <span id="bite-count">666</span></span>
+    </div>
+
+    <div class="card">
+        <h2>🎮 BALATON SURVIVAL: CHAOS MODE</h2>
+        <p>Uhýbej zubům (🦷), sbírej klobásy (🌭). Ovládání: <b>A / D / ŠIPKY</b></p>
+        <div id="game-area">
+            <div id="score-board">SKÓRE: 0</div>
+            <div id="player">🚣</div>
+        </div>
+        <button onclick="startGame()">START MASAKRU</button>
+    </div>
+
+    <div class="card">
+        <h2>🥩 DENNÍ PŘÍJEM BESTIE</h2>
+        <table>
+            <tr><th>ČAS</th><th>CHOD</th><th>POZNÁMKA</th></tr>
+            <tr><td>06:00</td><td>3kg Maďarské Klobásy</td><td>Pro ranní metabolismus.</td></tr>
+            <tr><td>12:00</td><td>Kotel Guláše</td><td>Včetně toho železného kotle.</td></tr>
+            <tr><td>22:00</td><td>Nohy neopatrných plavců</td><td>Jen jako drobný snack.</td></tr>
+        </table>
+    </div>
+
+    <div class="card">
+        <h2>🔥 GENERÁTOR MAĎARSKÉHO HNĚVU</h2>
+        <div id="quote-display" style="font-size: 30px; min-height: 70px; color: var(--hu-gold); font-weight: 900; margin: 20px 0;">--- KLIKNI NA TLAČÍTKO ---</div>
+        <button onclick="generateQuote()">NASRAT ČOBÍKA!</button>
+    </div>
+
+    <div class="card">
+        <h2>📸 TOTÁLNĚ PRAVDIVÁ GALERIE</h2>
+        <div class="mega-grid">
+            <img src="https://static.vecteezy.com/system/resources/thumbnails/070/238/854/small/a-person-rowing-on-a-lake-at-sunset-photo.jpeg" alt="Rowing">
+            <img src="https://www.simplyrecipes.com/thmb/1P8E9m3nTYPkvNu4ig3SqlSYcZ0=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/simply-recipes-hungarian-goulash-lead-1-9b243ad244134164aed863c874215ffa.jpg" alt="Goulash">
+            <img src="https://images.unsplash.com/photo-1516734212186-a967f81ad0d7?auto=format&fit=crop&w=600" alt="Hungary">
+            <img src="https://images.unsplash.com/photo-1590419690008-905895e8fe0d?auto=format&fit=crop&w=600" alt="Dog teeth">
+            <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=600" alt="Angry dog">
+            <img src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=600" alt="Food">
+        </div>
+    </div>
+</div>
+
+<script>
+    // --- POMOCNÉ FUNKCE ---
+    function shakeScreen() {
+        document.body.classList.add("screen-shake");
+        setTimeout(() => document.body.classList.remove("screen-shake"), 300);
+    }
+
+    function spawnParticles(x, y, emoji = "🌶️") {
+        for (let i = 0; i < 8; i++) {
+            const p = document.createElement("div");
+            p.className = "particle"; p.innerText = emoji;
+            p.style.left = x + "px"; p.style.top = y + "px";
+            p.style.setProperty("--x", (Math.random() * 200 - 100) + "px");
+            p.style.setProperty("--y", (Math.random() * 200 - 100) + "px");
+            document.body.appendChild(p);
+            setTimeout(() => p.remove(), 1000);
+        }
+    }
+
+    // --- RADAR ---
+    function scanRadar() {
+        const status = document.getElementById('radar-status');
+        status.innerText = "SKENUJU PAPRIKU...";
+        document.querySelectorAll('.blip').forEach(b => b.style.display = 'block');
+        setTimeout(() => {
+            status.innerText = "ČOBÍK DETEKOVÁN V RÁKOSÍ!";
+            shakeScreen();
+        }, 1000);
+    }
+
+    // --- SPRINT ---
+    let sprintPos = 10; let lastKey = '';
+    document.addEventListener('keydown', (e) => {
+        let key = e.key.toLowerCase();
+        if((key === 'a' || key === 'd') && key !== lastKey) {
+            lastKey = key; sprintPos += 15;
+            let finishLine = document.getElementById("sprint-river").offsetWidth - 80;
+            if(sprintPos >= finishLine) sprintPos = finishLine;
+            document.getElementById("sprint-boat").style.left = sprintPos + "px";
+        }
+    });
+    function resetSprint() { sprintPos = 10; lastKey = ''; document.getElementById("sprint-boat").style.left = "10px"; }
+
+    // --- CLICKER ---
+    let energy = 0;
+    function feedCobik() {
+        energy = Math.min(100, energy + 5);
+        document.getElementById("energy-bar").style.width = energy + "%";
+        document.getElementById("energy-status").innerText = `Energie: ${energy}%`;
+        const bowl = document.getElementById('goulash-bowl');
+        bowl.style.transform = "scale(1.3) rotate(10deg)";
+        setTimeout(() => bowl.style.transform = "scale(1)", 100);
+        if(energy === 100) { spawnParticles(window.innerWidth/2, window.innerHeight/2, "🔥"); energy = 0; }
+    }
+
+    // --- BALATON SURVIVAL ---
+    let gameRunning = false; let score = 0; let playerPos = 50;
+    const keys = { a: false, d: false, arrowleft: false, arrowright: false };
+
+    document.addEventListener('keydown', (e) => { if (e.key.toLowerCase() in keys) keys[e.key.toLowerCase()] = true; });
+    document.addEventListener('keyup', (e) => { if (e.key.toLowerCase() in keys) keys[e.key.toLowerCase()] = false; });
+
+    function gameLoop() {
+        if (!gameRunning) return;
+        if (keys.arrowleft || keys.a) playerPos = Math.max(2, playerPos - 0.8);
+        if (keys.arrowright || keys.d) playerPos = Math.min(93, playerPos + 0.8);
+        const pEl = document.getElementById('player');
+        pEl.style.left = playerPos + '%';
+
+        const pRect = pEl.getBoundingClientRect();
+        document.querySelectorAll('.game-obj').forEach(obj => {
+            const oRect = obj.getBoundingClientRect();
+            // FÉROVÝ HITBOX
+            if (!(pRect.left + 20 > oRect.right - 10 || pRect.right - 20 < oRect.left + 10 || 
+                  pRect.top + 10 > oRect.bottom - 10 || pRect.bottom - 10 < oRect.top + 10)) {
+                if(obj.dataset.type === 'zub') gameOver();
+                else { score += 50; document.getElementById('score-board').innerText = "SKÓRE: " + score; obj.remove(); }
+            }
+        });
+        requestAnimationFrame(gameLoop);
+    }
+
+    function createObject() {
+        if(!gameRunning) return;
+        const obj = document.createElement('div');
+        obj.className = 'game-obj';
+        const isZub = Math.random() > 0.4;
+        obj.innerText = isZub ? '🦷' : '🌭';
+        obj.dataset.type = isZub ? 'zub' : 'klobasa';
+        obj.style.left = Math.random() * 90 + '%';
+        obj.style.top = '-50px';
+        obj.style.transition = "top 2.5s linear";
+        document.getElementById('game-area').appendChild(obj);
+        setTimeout(() => obj.style.top = "500px", 50);
+        setTimeout(() => obj.remove(), 3000);
+    }
+
+    function startGame() {
+        gameRunning = true; score = 0; playerPos = 50;
+        document.querySelectorAll('.game-obj').forEach(o => o.remove());
+        const spawner = setInterval(() => { if(!gameRunning) clearInterval(spawner); else createObject(); }, 500);
+        requestAnimationFrame(gameLoop);
+    }
+
+    function gameOver() {
+        gameRunning = false; shakeScreen();
+        document.getElementById('alert').style.display = 'block';
+        setTimeout(() => document.getElementById('alert').style.display = 'none', 1500);
+        alert("KONEC! ČOBÍK TĚ ROZTRHAL. SKÓRE: " + score);
+    }
+
+    // --- GENERÁTOR HLÁŠEK ---
+    const quotes = ["NEMESKEDJ! (Nekecej!)", "A KURVA ÉLETBE! 🤬", "GULYÁS VAGY HALÁL!", "BALATON JE MOJE MOŘE!", "KDE JE MOJE ČABAJKA?!"];
+    function generateQuote() {
+        document.getElementById('quote-display').innerText = quotes[Math.floor(Math.random() * quotes.length)];
+        shakeScreen();
+        const count = document.getElementById('bite-count');
+        count.innerText = parseInt(count.innerText) + 1;
+    }
+</script>
+
 </body>
 </html>
